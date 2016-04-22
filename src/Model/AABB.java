@@ -1,6 +1,8 @@
 package Model;
 
 import javafx.geometry.Point2D;
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.paint.Color;
 
 /**
  * Represents an Aligned-Axis Bounding Box, used to represent a rectangular region that completely contains an entity
@@ -29,18 +31,18 @@ public class AABB {
      */
     public AABB(Point2D topLeft, int width, int height) {
         this.topLeft = topLeft;
-        this.bottomRight = new Point2D(topLeft.getX() + width, topLeft.getY() + height);
+        this.bottomRight = topLeft.add(width, height);
     }
 
     public Point2D getTopLeft() {
         return this.topLeft;
     }
 
-    public int getWidth() {
+    private int getWidth() {
         return (int) (this.bottomRight.getX() - this.topLeft.getX());
     }
 
-    public int getHeight() {
+    private int getHeight() {
         return (int) (this.bottomRight.getY() - this.topLeft.getY());
     }
 
@@ -50,7 +52,7 @@ public class AABB {
      * @param newTopLeft The new top left corner
      */
     public void moveTo(Point2D newTopLeft) {
-        Point2D diag = this.topLeft.subtract(this.bottomRight);
+        Point2D diag = this.bottomRight.subtract(this.topLeft);
         this.topLeft = newTopLeft;
         this.bottomRight = this.topLeft.add(diag);
     }
@@ -59,7 +61,7 @@ public class AABB {
      * Determine whether two AABBs are overlapping
      *
      * @param other The other AABB
-     * @return True if they the boxes overlap
+     * @return If they the boxes overlap
      */
     public boolean overlaps(AABB other) {
 
@@ -74,12 +76,21 @@ public class AABB {
         double secondTop = other.topLeft.getY();
         double secondBottom = other.bottomRight.getY();
 
-        // If two AABBs overlap, the top or bottom of one will be within the other's x-range,
-        // and the left or right of one will be within the other's y-range
-        boolean collided = (firstLeft < secondRight &&
+        // If two AABBs don't overlap then there is a gap
+        // between the side of one and the opposite side of the other
+        return (firstLeft < secondRight &&
                 firstRight > secondLeft &&
                 firstTop < secondBottom &&
                 firstBottom > secondTop);
-        return collided;
+    }
+
+    /**
+     * Fill in the area covered by the AABB. This should only be used for debugging
+     * @param gc The Graphics Context to draw on
+     */
+    public void draw(GraphicsContext gc)
+    {
+        gc.setFill(Color.GRAY);
+        gc.fillRect(topLeft.getX(), topLeft.getY(), getWidth(), getHeight());
     }
 }

@@ -8,19 +8,19 @@ import javafx.scene.paint.Color;
 
 public class Player implements IGameObject {
 
-    public Point2D velocity;
-    int x;
-    int y;
-    int width;
-    int height;
-    AABB boundingBox;
+    private Point2D velocity;
+    private int x;
+    private int y;
+    private int width;
+    private int height;
+    private AABB boundingBox;
     private Point2D position;
 
     public Player() {
         this.width = 10;
         this.height = 10;
-        this.boundingBox = new AABB(new Point2D(0, 0), this.width, this.height);
-        this.position = new Point2D(100, 50);
+        this.position = new Point2D(200, 50);
+        this.boundingBox = new AABB(this.position, this.width, this.height);
         this.velocity = new Point2D(0, 0);
     }
 
@@ -28,9 +28,10 @@ public class Player implements IGameObject {
         this.velocity = v;
     }
 
+    private boolean collided = false;
     @Override
     public void draw(GraphicsContext gc) {
-        gc.setFill(Color.BLACK);
+        gc.setFill(collided? Color.BLACK : Color.RED);
         gc.fillOval(this.position.getX(), this.position.getY(), this.width, this.height);
     }
 
@@ -49,12 +50,12 @@ public class Player implements IGameObject {
         this.move(w);
     }
 
-    void move(World w) {
+    private void move(World w) {
         Point2D newPosition = this.position.add(this.velocity);
         AABB oldAABB = boundingBox;
         this.boundingBox.moveTo(newPosition);
         boolean willCollide = w.entities.stream().anyMatch(this::collidedWith);
-
+        collided = willCollide;
         if (!willCollide) {
             this.position = newPosition;
             this.boundingBox.moveTo(newPosition);
