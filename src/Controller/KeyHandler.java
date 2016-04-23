@@ -30,19 +30,20 @@ public class KeyHandler {
 //            w.LoShapes.forEach(s -> s.setColor(Color.BLACK));
 //        }
 
-        w.player.setVelocity((new Point2D(0, 0)));
+        Point2D newVelocity = new Point2D(0, 0);
         if (inputKeys.contains(KeyCode.UP)) {
-            w.player.setVelocity(new Point2D(0, -5));
+            newVelocity = newVelocity.add(0, -5);
         }
         if (inputKeys.contains(KeyCode.DOWN)) {
-            w.player.setVelocity(new Point2D(0, 5));
+            newVelocity = newVelocity.add(0, 5);
         }
         if (inputKeys.contains(KeyCode.LEFT)) {
-            w.player.setVelocity(new Point2D(-5, 0));
+            newVelocity = newVelocity.add(-5, 0);
         }
         if (inputKeys.contains(KeyCode.RIGHT)) {
-            w.player.setVelocity(new Point2D(5, 0));
+            newVelocity = newVelocity.add(5, 0);
         }
+        w.player.setVelocity(newVelocity);
 
         // Alternatively,
         //w.LoShapes.forEach(s -> s.setColor(inputKeys.contains(KeyCode.SPACE) ? Color.RED : Color.BLACK));
