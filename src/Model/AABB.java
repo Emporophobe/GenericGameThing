@@ -35,26 +35,95 @@ public class AABB {
     }
 
     public Point2D getTopLeft() {
-        return this.topLeft;
+        return topLeft;
+    }
+
+    public  Point2D getBottomRight(){
+        return bottomRight;
     }
 
     private int getWidth() {
-        return (int) (this.bottomRight.getX() - this.topLeft.getX());
+        return (int) (bottomRight.getX() - topLeft.getX());
     }
 
     private int getHeight() {
-        return (int) (this.bottomRight.getY() - this.topLeft.getY());
+        return (int) (bottomRight.getY() - topLeft.getY());
+    }
+
+    public Point2D getBottomLeft(){
+        return new Point2D(topLeft.getX(), topLeft.getY() + getHeight());
+    }
+
+    public Point2D getTopRight(){
+        return new Point2D(topLeft.getX() + getWidth(), topLeft.getY());
     }
 
     /**
-     * Move the AABB to have a new top left corner and the same size
+     * Move the AABB to have a new position and the same size
      *
      * @param newTopLeft The new top left corner
      */
     public void moveTo(Point2D newTopLeft) {
-        Point2D diag = this.bottomRight.subtract(this.topLeft);
-        this.topLeft = newTopLeft;
-        this.bottomRight = this.topLeft.add(diag);
+        Point2D diag = bottomRight.subtract(topLeft);
+        topLeft = newTopLeft;
+        bottomRight = topLeft.add(diag);
+    }
+
+    /**
+     * Move the AABB to have a new position and the same size
+     * @param newX The new X-coordinate of the top left corner
+     * @param newY The new Y-coordinate of the top left corner
+     */
+    public void moveTo(int newX, int newY){
+        moveTo(new Point2D(newX, newY));
+    }
+
+    /**
+     * Move the AABB by a given change in x and y
+     * @param dx The x distance to move, in pixels
+     * @param dy The y distance to move, in pixels
+     */
+    public void moveBy(int dx, int dy){
+        moveTo(topLeft.add(dx, dy));
+    }
+
+    /**
+     * Move the AABB as far as possible in the given direction without hitting the other AABB
+     * @param velocity The velocity vector to move along (can be unit vector or any magnitude)
+     * @param other The other AABB
+     * @return The new TopLeft corner of the moving AABB
+     */
+    public Point2D moveTowards(Point2D velocity, AABB other){
+        Point2D vBar = velocity.normalize();
+        Point2D testPoint = getTopLeft();
+        Point2D oldTopLeft = testPoint;
+        Point2D newTopLeft = testPoint;
+        Point2D prevTopLeft = testPoint;
+
+        // if we are (close to) not moving we would get stuck in an infinite loop
+        if (vBar == new Point2D(0, 0)){
+            return oldTopLeft;
+        }
+
+        while(true){
+            testPoint = testPoint.add(vBar);
+            newTopLeft = new Point2D((int) testPoint.getX(), (int) testPoint.getY());
+            moveTo(newTopLeft);
+            if(overlaps(other)){
+                moveTo(prevTopLeft);
+                return prevTopLeft;
+            }
+            prevTopLeft = newTopLeft;
+        }
+//        while(!overlaps(other)){
+//            testPoint = testPoint.add(vBar);
+//            newTopLeft = new Point2D((int) testPoint.getX(), (int) testPoint.getY());
+//            moveTo(newTopLeft);
+// //           System.out.println("Testing point "+ testPoint.getX() + ", " + testPoint.getY());
+//        }
+//        System.out.println("(" + oldTopLeft.getX() + ", " + oldTopLeft.getY() + ") -> (" +
+//                newTopLeft.getX() + ", " + newTopLeft.getY() + ")");
+//        return newTopLeft;
     }
 
     /**
@@ -66,10 +135,10 @@ public class AABB {
     public boolean overlaps(AABB other) {
 
         // Get the separate x and y coordinates of both AABBs
-        double firstLeft = this.topLeft.getX();
-        double firstRight = this.bottomRight.getX();
-        double firstTop = this.topLeft.getY();
-        double firstBottom = this.bottomRight.getY();
+        double firstLeft = topLeft.getX();
+        double firstRight = bottomRight.getX();
+        double firstTop = topLeft.getY();
+        double firstBottom = bottomRight.getY();
 
         double secondLeft = other.topLeft.getX();
         double secondRight = other.bottomRight.getX();
@@ -82,6 +151,21 @@ public class AABB {
                 firstRight > secondLeft &&
                 firstTop < secondBottom &&
                 firstBottom > secondTop);
+    }
+
+    /**
+     * Get the distance between the closest edges of this and another AABB
+     * @param other The other AABB
+     * @return The
+     */
+    public Point2D distanceTo(AABB other){
+        int deltaX = (int) Math.min(topLeft.getX() - other.getBottomRight().getX(),
+                                    bottomRight.getX() - other.getTopLeft().getX());
+        int deltaY = (int) Math.min(topLeft.getY() - other.getBottomRight().getY(),
+                                    bottomRight.getY() - other.getTopLeft().getY());
+
+        System.out.println(deltaX + ", " + deltaY);
+        return new Point2D(deltaX, deltaY);
     }
 
     /**

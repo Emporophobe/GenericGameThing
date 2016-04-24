@@ -24,28 +24,32 @@ public class KeyHandler {
     }
 
     public static void processKeys(World w) {
-//        if (inputKeys.contains(KeyCode.SPACE)) {
-//            w.LoShapes.forEach(s -> s.setColor(Color.RED));
-//        } else {
-//            w.LoShapes.forEach(s -> s.setColor(Color.BLACK));
-//        }
 
-        Point2D newVelocity = new Point2D(0, 0);
+        // Handle the arrow keys by combining them into a single vector
+        Point2D moveDirection = new Point2D(0, 0);
         if (inputKeys.contains(KeyCode.UP)) {
-            newVelocity = newVelocity.add(0, -5);
+            moveDirection = moveDirection.add(0, -1);
         }
         if (inputKeys.contains(KeyCode.DOWN)) {
-            newVelocity = newVelocity.add(0, 5);
+            moveDirection = moveDirection.add(0, 1);
         }
         if (inputKeys.contains(KeyCode.LEFT)) {
-            newVelocity = newVelocity.add(-5, 0);
+            moveDirection = moveDirection.add(-1, 0);
         }
         if (inputKeys.contains(KeyCode.RIGHT)) {
-            newVelocity = newVelocity.add(5, 0);
+            moveDirection = moveDirection.add(1, 0);
         }
-        w.player.setVelocity(newVelocity);
+        w.player.movePlayer(moveDirection);
 
-        // Alternatively,
-        //w.LoShapes.forEach(s -> s.setColor(inputKeys.contains(KeyCode.SPACE) ? Color.RED : Color.BLACK));
+        // Jump
+        if (inputKeys.contains(KeyCode.SPACE)){
+            w.player.jump();
+        }
+
+        // Restart
+        if (inputKeys.contains(KeyCode.R)){
+            w.initWorld();
+        }
+
     }
 }
