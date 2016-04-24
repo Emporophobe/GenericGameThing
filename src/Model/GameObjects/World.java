@@ -16,7 +16,7 @@ public class World {
         IGameObject floor1 = new Floor(new Point2D(10, 10), 60, 15);
         IGameObject floor2 = new Floor(new Point2D(50, 50), 100, 100);
         IGameObject floor3 = new Floor(new Point2D(0, 180), 400, 30);
-        Floor floor4 = new Floor(new Point2D(350, 100), 10, 300);
+        Floor floor4 = new Floor(new Point2D(350, 100), 10, 70);
 
         player = new Player();
 
