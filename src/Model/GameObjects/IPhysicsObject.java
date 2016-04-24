@@ -1,7 +1,5 @@
 package Model.GameObjects;
 
-import Model.AABB;
-import Model.World;
 import javafx.scene.canvas.GraphicsContext;
 
 /**

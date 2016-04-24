@@ -1,4 +1,4 @@
-package Model;
+package Model.GameObjects;
 
 import javafx.geometry.Point2D;
 import javafx.scene.canvas.GraphicsContext;
@@ -7,7 +7,7 @@ import javafx.scene.paint.Color;
 /**
  * Represents an Aligned-Axis Bounding Box, used to represent a rectangular region that completely contains an entity
  */
-public class AABB {
+class AABB {
     private Point2D topLeft;
     private Point2D bottomRight;
 
@@ -29,16 +29,16 @@ public class AABB {
      * @param width   The width of the AABB
      * @param height  The height of the AABB
      */
-    public AABB(Point2D topLeft, int width, int height) {
+    AABB(Point2D topLeft, int width, int height) {
         this.topLeft = topLeft;
         this.bottomRight = topLeft.add(width, height);
     }
 
-    public Point2D getTopLeft() {
+    Point2D getTopLeft() {
         return topLeft;
     }
 
-    public  Point2D getBottomRight(){
+    Point2D getBottomRight(){
         return bottomRight;
     }
 
@@ -63,7 +63,7 @@ public class AABB {
      *
      * @param newTopLeft The new top left corner
      */
-    public void moveTo(Point2D newTopLeft) {
+    void moveTo(Point2D newTopLeft) {
         Point2D diag = bottomRight.subtract(topLeft);
         topLeft = newTopLeft;
         bottomRight = topLeft.add(diag);
@@ -83,7 +83,7 @@ public class AABB {
      * @param dx The x distance to move, in pixels
      * @param dy The y distance to move, in pixels
      */
-    public void moveBy(int dx, int dy){
+    void moveBy(int dx, int dy){
         moveTo(topLeft.add(dx, dy));
     }
 
@@ -93,7 +93,7 @@ public class AABB {
      * @param other The other AABB
      * @return The new TopLeft corner of the moving AABB
      */
-    public Point2D moveTowards(Point2D velocity, AABB other){
+    Point2D moveTowards(Point2D velocity, AABB other){
         Point2D vBar = velocity.normalize();
         Point2D testPoint = getTopLeft();
         Point2D oldTopLeft = testPoint;
@@ -132,7 +132,7 @@ public class AABB {
      * @param other The other AABB
      * @return If they the boxes overlap
      */
-    public boolean overlaps(AABB other) {
+    boolean overlaps(AABB other) {
 
         // Get the separate x and y coordinates of both AABBs
         double firstLeft = topLeft.getX();
@@ -158,7 +158,7 @@ public class AABB {
      * @param other The other AABB
      * @return The
      */
-    public Point2D distanceTo(AABB other){
+    Point2D distanceTo(AABB other){
         int deltaX = (int) Math.min(topLeft.getX() - other.getBottomRight().getX(),
                                     bottomRight.getX() - other.getTopLeft().getX());
         int deltaY = (int) Math.min(topLeft.getY() - other.getBottomRight().getY(),

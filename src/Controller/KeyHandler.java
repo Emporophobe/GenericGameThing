@@ -1,6 +1,6 @@
 package Controller;
 
-import Model.World;
+import Model.GameObjects.World;
 import javafx.geometry.Point2D;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;

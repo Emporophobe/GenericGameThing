@@ -1,6 +1,6 @@
 package View;
 
-import Model.World;
+import Model.GameObjects.World;
 import javafx.scene.canvas.GraphicsContext;
 
 public class DrawWorld {

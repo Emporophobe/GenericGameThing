@@ -1,7 +1,9 @@
 package app;
 
 import Controller.KeyHandler;
-import Model.World;
+import Model.GameObjects.World;
+import Model.UIObjects.UI;
+import View.DrawUI;
 import View.DrawWorld;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
@@ -34,6 +36,9 @@ public class Main extends Application {
         World w = new World();
         w.initWorld();
 
+        UI ui = new UI();
+        ui.initUI();
+
         // Key handlers
         theScene.setOnKeyPressed(KeyHandler::handleKeyPressed);
         theScene.setOnKeyReleased(KeyHandler::handleKeyReleased);
@@ -46,6 +51,7 @@ public class Main extends Application {
                 KeyHandler.processKeys(w);
                 w.onTick();
                 DrawWorld.draw(w, gc);
+                DrawUI.draw(ui, gc);
             }
         }.start();
     }

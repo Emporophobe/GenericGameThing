@@ -1,7 +1,5 @@
 package Model.GameObjects;
 
-import Model.AABB;
-import Model.World;
 import javafx.scene.canvas.GraphicsContext;
 
 public interface IGameObject {
@@ -15,15 +13,15 @@ public interface IGameObject {
     /**
      * Tell if this entity is colliding with another
      *
-     * @param other
-     * @return
+     * @param other The IGameObject to test against
+     * @return Whether the two are colliding
      */
     boolean collidedWith(IGameObject other);
 
     /**
      * Get the bounding box for the entity
      *
-     * @return
+     * @return The AABB for this object
      */
     AABB getAABB();
 

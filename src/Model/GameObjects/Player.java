@@ -1,7 +1,5 @@
 package Model.GameObjects;
 
-import Model.AABB;
-import Model.World;
 import javafx.geometry.Point2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
@@ -17,7 +15,7 @@ public class Player implements IPhysicsObject {
     private boolean isOnGround;
     private boolean collided = false;
 
-    public Player() {
+    Player() {
         width = 10;
         height = 10;
         position = new Point2D(200, 50);
