@@ -27,19 +27,19 @@ public class KeyHandler {
 
         // Handle the arrow keys by combining them into a single vector
         Point2D moveDirection = new Point2D(0, 0);
-        if (inputKeys.contains(KeyCode.UP)) {
-            moveDirection = moveDirection.add(0, -1);
-        }
-        if (inputKeys.contains(KeyCode.DOWN)) {
-            moveDirection = moveDirection.add(0, 1);
-        }
+//        if (inputKeys.contains(KeyCode.UP)) {
+//            moveDirection = moveDirection.add(0, -1);
+//        }
+//        if (inputKeys.contains(KeyCode.DOWN)) {
+//            moveDirection = moveDirection.add(0, 1);
+//        }
         if (inputKeys.contains(KeyCode.LEFT)) {
             moveDirection = moveDirection.add(-1, 0);
         }
         if (inputKeys.contains(KeyCode.RIGHT)) {
             moveDirection = moveDirection.add(1, 0);
         }
-        w.player.movePlayer(moveDirection);
+        w.player.setImpulse(moveDirection.normalize());
 
         // Jump
         if (inputKeys.contains(KeyCode.SPACE)){
