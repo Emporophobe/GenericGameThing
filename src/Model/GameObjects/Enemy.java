@@ -14,7 +14,7 @@ class Enemy extends Living {
     void aiTurn(World w) {
         int sightDistance = 100;
 
-        Point2D playerPos = w.player.getAABB().getTopLeft();
+        Point2D playerPos = w.getPlayer().getAABB().getTopLeft();
 
         if (position.distance(playerPos) <= sightDistance) {
             if (position.getX() < playerPos.getX()) {

@@ -1,5 +1,6 @@
 package Model.UIObjects;
 
+import Model.GameObjects.World;
 import javafx.geometry.Point2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
@@ -27,6 +28,11 @@ class StatusBar implements IUIObject{
         gc.fillRect(upperLeft.getX(), upperLeft.getY(), width, height);
         gc.setFill(fgColor);
         gc.fillRect(upperLeft.getX(), upperLeft.getY(), width * percent, height);
+    }
+
+    @Override
+    public void onTick(World w) {
+
     }
 
     void setPercent(float percent){

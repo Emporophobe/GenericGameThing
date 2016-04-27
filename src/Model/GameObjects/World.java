@@ -3,28 +3,34 @@ package Model.GameObjects;
 import javafx.geometry.Point2D;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class World {
-    public ArrayList<IGameObject> entities = new ArrayList<>();
-    public Living player = new Player();
-    public ArrayList<Living> badGuys = new ArrayList<>();
+    private List<IGameObject> entities = new ArrayList<>();
+    private Living player = new Player();
+    private List<Living> badGuys = new ArrayList<>();
+
+    private List<String> messages = new ArrayList<>();
 
     public World() {
         this.initWorld();
     }
 
     public void initWorld() {
-        IGameObject floor1 = new Floor(new Point2D(10, 10), 60, 15);
-        IGameObject floor2 = new Floor(new Point2D(50, 50), 100, 100);
-        IGameObject floor3 = new Floor(new Point2D(0, 180), 400, 30);
+        getMessages().clear();
+
+        Floor floor1 = new Floor(new Point2D(10, 10), 60, 15);
+        Floor floor2 = new Floor(new Point2D(50, 50), 100, 100);
+        Floor floor3 = new Floor(new Point2D(0, 180), 400, 30);
         Floor floor4 = new Floor(new Point2D(350, 100), 10, 70);
+        Floor floor5 = new Floor(new Point2D(400, 150), 300, 10);
 
         Enemy e1 = new Enemy();
-        badGuys.clear();
+        getBadGuys().clear();
 
-        badGuys.add(e1);
+        getBadGuys().add(e1);
 
-        player = new Player();
+        setPlayer(new Player());
 
         entities.clear();
 
@@ -32,15 +38,37 @@ public class World {
         entities.add(floor2);
         entities.add(floor3);
         entities.add(floor4);
+        entities.add(floor5);
 
-        entities.add(player);
+        getEntities().add(getPlayer());
 //
 //        entities.addAll(badGuys);
     }
 
     public void onTick() {
-        entities.forEach(e -> e.onTick(this));
+        getEntities().forEach(e -> e.onTick(this));
 //        player.onTick(this);
-        badGuys.forEach((b -> b.onTick(this)));
+        getBadGuys().forEach((b -> b.onTick(this)));
     }
+
+    public List<IGameObject> getEntities() {
+        return entities;
+    }
+
+    public Living getPlayer() {
+        return player;
+    }
+
+    private void setPlayer(Living player) {
+        this.player = player;
+    }
+
+    public List<Living> getBadGuys() {
+        return badGuys;
+    }
+
+    public List<String> getMessages() {
+        return messages;
+    }
+
 }

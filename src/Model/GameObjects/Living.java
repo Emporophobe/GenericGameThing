@@ -5,6 +5,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public abstract class Living implements IPhysicsObject {
 
@@ -19,6 +20,8 @@ public abstract class Living implements IPhysicsObject {
 
     private int maxHealth;
     private int health;
+
+    private List<String> consoleMessages = new ArrayList<>();
 
     Living(int width, int height, Point2D position, int speed, int maxHealth){
         this.width = width;
@@ -82,6 +85,8 @@ public abstract class Living implements IPhysicsObject {
         setDirection(impulse);
         gravity();
         move(w);
+        w.getMessages().addAll(consoleMessages);
+        consoleMessages.clear();
     }
 
     void aiTurn(World w) {
@@ -103,7 +108,6 @@ public abstract class Living implements IPhysicsObject {
         if(!validDirections.contains(Directions.DOWN) &&
                 validDirections.contains(Directions.UP)){
             velocity = velocity.add(0, -10);
-
         }
     }
 
@@ -128,19 +132,19 @@ public abstract class Living implements IPhysicsObject {
         AABB testAABB = getAABB();
 
         testAABB.moveBy(0, -1);
-        if (!w.entities.stream().anyMatch(this::collidedWith)){
+        if (!w.getEntities().stream().anyMatch(this::collidedWith)){
             dirs.add(Directions.UP);
         }
         testAABB.moveBy(0, 2);
-        if (!w.entities.stream().anyMatch(this::collidedWith)){
+        if (!w.getEntities().stream().anyMatch(this::collidedWith)){
             dirs.add(Directions.DOWN);
         }
         testAABB.moveBy(-1, -1);
-        if (!w.entities.stream().anyMatch(this::collidedWith)){
+        if (!w.getEntities().stream().anyMatch(this::collidedWith)){
             dirs.add(Directions.LEFT);
         }
         testAABB.moveBy(2, 0);
-        if (!w.entities.stream().anyMatch(this::collidedWith)){
+        if (!w.getEntities().stream().anyMatch(this::collidedWith)){
             dirs.add(Directions.RIGHT);
         }
 
@@ -172,7 +176,7 @@ public abstract class Living implements IPhysicsObject {
 
         collided = false;
         ArrayList<IGameObject> collisionTargets = new ArrayList<>();
-        w.entities.stream().filter(this::collidedWith).forEach(x -> {
+        w.getEntities().stream().filter(this::collidedWith).forEach(x -> {
             collided = true;
             collisionTargets.add(x);
         });

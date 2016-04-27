@@ -39,11 +39,11 @@ public class KeyHandler {
         if (inputKeys.contains(KeyCode.RIGHT)) {
             moveDirection = moveDirection.add(1, 0);
         }
-        w.player.setImpulse(moveDirection.normalize());
+        w.getPlayer().setImpulse(moveDirection.normalize());
 
         // Jump
         if (inputKeys.contains(KeyCode.SPACE)){
-            w.player.jump();
+            w.getPlayer().jump();
         }
 
         // Restart

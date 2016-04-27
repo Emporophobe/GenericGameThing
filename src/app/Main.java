@@ -3,6 +3,7 @@ package app;
 import Controller.KeyHandler;
 import Model.GameObjects.World;
 import Model.UIObjects.UI;
+import View.DrawBackground;
 import View.DrawUI;
 import View.DrawWorld;
 import javafx.animation.AnimationTimer;
@@ -23,7 +24,7 @@ public class Main extends Application {
         // Set up Javafx objects
         Group root = new Group();
         Scene theScene = new Scene(root);
-        Canvas canvas = new Canvas(400, 200);
+        Canvas canvas = new Canvas(UI.getScreenWidth(), UI.getScreenHeight());
 
         root.getChildren().add(canvas);
         primaryStage.setScene(theScene);
@@ -47,9 +48,13 @@ public class Main extends Application {
         new AnimationTimer() {
             @Override
             public void handle(long currentNanoTime) {
-                gc.clearRect(0, 0, 400, 200);
-                KeyHandler.processKeys(w);
                 w.onTick();
+                ui.onTick(w);
+
+                KeyHandler.processKeys(w);
+
+                gc.clearRect(0, 0, UI.getScreenWidth(), UI.getScreenHeight());
+                DrawBackground.draw(gc);
                 DrawWorld.draw(w, gc);
                 DrawUI.draw(ui, gc);
             }
