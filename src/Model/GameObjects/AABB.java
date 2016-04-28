@@ -154,6 +154,29 @@ class AABB {
     }
 
     /**
+     * Check if the given point is inside the given AABB
+     * @param p The point to test
+     * @param box The AABB to test
+     * @return True if p is inside other
+     */
+    static boolean insidePoint(Point2D p, AABB box){
+        return (p.getX() >= box.getTopLeft().getX() &&
+                p.getX() <= box.getBottomRight().getX() &&
+                p.getY() >= box.getTopLeft().getY() &&
+                p.getY() <= box.getBottomRight().getY());
+    }
+
+    /**
+     * Check if the given point is inside any collision box in the World
+     * @param p The point to test
+     * @param w The World to check against
+     * @return True if the given point does not collide with anything
+     */
+    static boolean openPoint(Point2D p, World w){
+        return !w.getEntities().stream().anyMatch(e -> insidePoint(p, e.getAABB()));
+    }
+
+    /**
      * Get the distance between the closest edges of this and another AABB
      * @param other The other AABB
      * @return The

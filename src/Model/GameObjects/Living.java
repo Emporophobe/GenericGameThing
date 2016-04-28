@@ -9,19 +9,19 @@ import java.util.List;
 
 public abstract class Living implements IPhysicsObject {
 
-    private Point2D velocity = new Point2D(0, 0);
-    int width;
-    int height;
-    private AABB boundingBox;
-    Point2D position;
-    private int speed;
-    boolean collided = false;
-    private ArrayList<Directions> validDirections = new ArrayList<>();
+    protected Point2D velocity = new Point2D(0, 0);
+    protected int width;
+    protected int height;
+    protected AABB boundingBox;
+    protected Point2D position;
+    protected int speed;
+    protected boolean collided = false;
+    protected List<Directions> validDirections = new ArrayList<>();
 
-    private int maxHealth;
-    private int health;
+    protected int maxHealth;
+    protected int health;
 
-    private List<String> consoleMessages = new ArrayList<>();
+    protected ArrayList<String> consoleMessages = new ArrayList<>();
 
     Living(int width, int height, Point2D position, int speed, int maxHealth){
         this.width = width;
@@ -95,8 +95,9 @@ public abstract class Living implements IPhysicsObject {
 
     @Override
     public void gravity() {
+        int g = 2;
         if(validDirections.contains(Directions.DOWN)) {
-            velocity = velocity.add(0, 3);
+            velocity = velocity.add(0, g);
         }
         else if (velocity.getY() > 0){
             velocity = new Point2D(velocity.getX(), 0);
@@ -120,15 +121,15 @@ public abstract class Living implements IPhysicsObject {
         }
     }
 
-    private enum Directions{
+    enum Directions{
         UP,
         DOWN,
         LEFT,
         RIGHT
     }
 
-    private ArrayList<Directions> getValidDirections(World w){
-        ArrayList<Directions> dirs = new ArrayList<>();
+    List<Directions> getValidDirections(World w){
+        List<Directions> dirs = new ArrayList<>();
         AABB testAABB = getAABB();
 
         testAABB.moveBy(0, -1);
