@@ -94,36 +94,35 @@ class AABB {
      * @return The new TopLeft corner of the moving AABB
      */
     Point2D moveTowards(Point2D velocity, AABB other){
+
         Point2D vBar = velocity.normalize();
-        Point2D testPoint = getTopLeft();
-        Point2D oldTopLeft = testPoint;
-        Point2D newTopLeft = testPoint;
-        Point2D prevTopLeft = testPoint;
+        Point2D newPos = getTopLeft();
+        Point2D prevPos = getTopLeft();
 
-        // if we are (close to) not moving we would get stuck in an infinite loop
-        if (vBar == new Point2D(0, 0)){
-            return oldTopLeft;
+        // If we're already overlapping then return current positionr
+        if(overlaps(other)){
+            return prevPos;
+        }
+        // If velocity is 0, return original point
+        else if (vBar == new Point2D(0, 0)){
+            return prevPos;
         }
 
-        while(true){
-            testPoint = testPoint.add(vBar);
-            newTopLeft = new Point2D((int) testPoint.getX(), (int) testPoint.getY());
-            moveTo(newTopLeft);
-            if(overlaps(other)){
-                moveTo(prevTopLeft);
-                return prevTopLeft;
+        // Keep moving towards the other until we are about to hit it
+        while (true){
+            moveTo(newPos);
+            if (overlaps(other)){
+                // round components to the nearest int since we can't have fractions of pixels
+                prevPos = new Point2D((int)(prevPos.getX() + 0.5), (int)(prevPos.getY() + 0.5));
+                moveTo(prevPos);
+                return prevPos;
             }
-            prevTopLeft = newTopLeft;
+            else{
+                prevPos = newPos;
+                newPos = prevPos.add(vBar);
+
+            }
         }
-//        while(!overlaps(other)){
-//            testPoint = testPoint.add(vBar);
-//            newTopLeft = new Point2D((int) testPoint.getX(), (int) testPoint.getY());
-//            moveTo(newTopLeft);
-// //           System.out.println("Testing point "+ testPoint.getX() + ", " + testPoint.getY());
-//        }
-//        System.out.println("(" + oldTopLeft.getX() + ", " + oldTopLeft.getY() + ") -> (" +
-//                newTopLeft.getX() + ", " + newTopLeft.getY() + ")");
-//        return newTopLeft;
     }
 
     /**
