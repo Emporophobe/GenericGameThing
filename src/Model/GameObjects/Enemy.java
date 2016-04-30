@@ -18,7 +18,7 @@ class Enemy extends Living {
         int playerX = (int) playerPos.getX();
         int thisX = (int) position.getX();
 
-
+        setImpulse(new Point2D(0, 0));
         if (position.distance(playerPos) <= sightDistance &&
                 position.distance(playerPos) > speed) {
             if (playerX > thisX && // We are left of the player
@@ -28,18 +28,16 @@ class Enemy extends Living {
                     !AABB.openPoint(position.add(-speed, height + 1), w)) {
                 setImpulse(new Point2D(-1, 0));
             }
-            else{
-                setImpulse(new Point2D(0, 0));
-            }
         }
-        else if (position.subtract(playerPos).getX() <= speed){
-            position = boundingBox.moveTowards(velocity, w.getPlayer().getAABB());
-        }
+
+//        else if (position.subtract(playerPos).getX() <= speed){
+//            position = boundingBox.moveTowards(velocity, w.getPlayer().getAABB());
+//        }
     }
 
     @Override
     public void draw(GraphicsContext gc) {
-        gc.setFill(Color.RED);
+        gc.setFill(getHealth() > 0 ? Color.RED : Color.DARKRED);
         gc.fillRect(position.getX(), position.getY(), width, height);
     }
 }

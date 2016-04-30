@@ -46,6 +46,11 @@ public class KeyHandler {
             w.getPlayer().jump();
         }
 
+        // Attack 1
+        if (inputKeys.contains(KeyCode.F)){
+            w.getPlayer().attack1(w);
+        }
+
         // Restart
         if (inputKeys.contains(KeyCode.R)){
             w.initWorld();

@@ -8,6 +8,7 @@ public class DrawWorld {
         w.getEntities().forEach(e -> e.draw(gc));
         w.getBadGuys().forEach(b -> b.draw(gc));
         w.getPlayer().draw(gc);
+        w.getAttacks().forEach(a -> a.draw(gc));
     }
 
 

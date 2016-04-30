@@ -1,27 +1,32 @@
 package Model.GameObjects;
 
+import Model.Directions;
 import javafx.geometry.Point2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 public abstract class Living implements IPhysicsObject {
 
-    protected Point2D velocity = new Point2D(0, 0);
-    protected int width;
-    protected int height;
-    protected AABB boundingBox;
-    protected Point2D position;
-    protected int speed;
-    protected boolean collided = false;
-    protected List<Directions> validDirections = new ArrayList<>();
+    private Point2D velocity = new Point2D(0, 0);
+    int width;
+    int height;
+    private AABB boundingBox;
+    Point2D position;
+    int speed;
+    boolean collided = false;
+    private List<Directions> validDirections = new ArrayList<>();
+    Directions facing;
 
-    protected int maxHealth;
-    protected int health;
+    private int maxHealth;
+    private int health;
 
-    protected ArrayList<String> consoleMessages = new ArrayList<>();
+    boolean isDead = false;
+
+    ArrayList<String> consoleMessages = new ArrayList<>();
 
     Living(int width, int height, Point2D position, int speed, int maxHealth){
         this.width = width;
@@ -71,6 +76,13 @@ public abstract class Living implements IPhysicsObject {
         return health;
     }
 
+    public void damage(int amount){
+        health -= amount;
+        if (health <= 0){
+            consoleMessages.add("> Process \"User\" terminated with exit code 1");
+        }
+    }
+
 
     private Point2D impulse = new Point2D(0, 0);
 
@@ -80,13 +92,17 @@ public abstract class Living implements IPhysicsObject {
 
     @Override
     public void onTick(World w) {
-        validDirections = getValidDirections(w);
-        aiTurn(w);
-        setDirection(impulse);
-        gravity();
-        move(w);
-        w.getMessages().addAll(consoleMessages);
-        consoleMessages.clear();
+        if (health > 0) {
+            validDirections = getValidDirections(w);
+            aiTurn(w);
+            setDirection(impulse);
+            gravity();
+            move(w);
+            resolveAttacks(w);
+
+            w.getMessages().addAll(consoleMessages);
+            consoleMessages.clear();
+        }
     }
 
     void aiTurn(World w) {
@@ -109,6 +125,7 @@ public abstract class Living implements IPhysicsObject {
         if(!validDirections.contains(Directions.DOWN) &&
                 validDirections.contains(Directions.UP)){
             velocity = velocity.add(0, -10);
+            //consoleMessages.add("> Jump()");
         }
     }
 
@@ -118,17 +135,18 @@ public abstract class Living implements IPhysicsObject {
         }
         else if (velocity.magnitude() <= speed){
             velocity = direction.multiply(speed);
+            if (velocity.getX() < 0){
+                facing = Directions.LEFT;
+            }
+            else{
+                facing = Directions.RIGHT;
+            }
         }
     }
 
-    enum Directions{
-        UP,
-        DOWN,
-        LEFT,
-        RIGHT
-    }
 
-    List<Directions> getValidDirections(World w){
+
+    private List<Directions> getValidDirections(World w){
         List<Directions> dirs = new ArrayList<>();
         AABB testAABB = getAABB();
 
@@ -192,4 +210,23 @@ public abstract class Living implements IPhysicsObject {
             }
         }
     }
+
+    /**
+     * Get damage from any attacks overlapping us and remove non-piercing attacks
+     * @param w The world
+     */
+    private void resolveAttacks(World w){
+        for (Iterator<Attack> i = w.getAttacks().iterator(); i.hasNext();){
+            Attack a = i.next();
+
+            if (a.collidedWith(this)) {
+                health -= a.getRawDamage();
+
+                if (a.isPiercing()) {
+                    i.remove();
+                }
+            }
+        }
+    }
+
 }
